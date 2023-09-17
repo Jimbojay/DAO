@@ -24,8 +24,6 @@ async function main() {
 
   await dao.deployed()
   console.log(`DAO deployed to: ${dao.address}\n`) 
-
-
 }
 
 // We recommend this pattern to be able to use async/await everywhere
