@@ -23,6 +23,8 @@ async function main() {
   const investor3 = accounts[3]
   const recipient = accounts[4]
 
+  // console.log(funder)   
+
   let transaction
 
   // Fetch network
@@ -38,8 +40,13 @@ async function main() {
   transaction = await token.transfer(investor1.address, tokens(200000))
   await transaction.wait()
 
+  console.log("user1")
+
   transaction = await token.transfer(investor2.address, tokens(200000))
   await transaction.wait()
+
+  console.log("user2")
+
 
   transaction = await token.transfer(investor3.address, tokens(200000))
   await transaction.wait()
@@ -55,29 +62,60 @@ async function main() {
   await transaction.wait()
   console.log(`Sent funds to dao treasury...\n`)
 
+  //Upvote
   for (var i = 0; i < 3; i++) {
       // Create Proposal
-      transaction = await dao.connect(investor1).createProposal(`Proposal ${i + 1}`, ether(100 * (i+1)), recipient.address)
+      transaction = await dao.connect(investor1).createProposal(`Proposal ${i + 1}`, ether(10 * (i+1)), recipient.address, "ipsum lorum")
       await transaction.wait()
       console.log(`Proposal ${i + 1}`)
 
+
       // Vote 1
-      transaction = await dao.connect(investor1).vote(i + 1)
+      transaction = await dao.connect(investor1).upVote(i + 1)
       await transaction.wait()
       console.log(`Investor 1 vote ${i + 1}`)
 
       // Vote 2
-      transaction = await dao.connect(investor2).vote(i + 1)
+      transaction = await dao.connect(investor2).upVote(i + 1)
       await transaction.wait()
       console.log(`Investor 2 vote ${i + 1}`)
 
       // Vote 3
-      transaction = await dao.connect(investor3).vote(i + 1)
+      transaction = await dao.connect(investor3).upVote(i + 1)
       await transaction.wait()
       console.log(`Investor 3 vote ${i + 1}`)
 
       // Finalize
-      transaction = await dao.connect(investor1).finalizeProposal(i + 1)
+      transaction = await dao.connect(investor1).finalizeProposal(i + 1, "Approve")
+      await transaction.wait()
+
+      console.log(`Created & Finalized Proposal ${i + 1}\n`)
+  };
+
+  //Upvote
+  for (var i = 3; i < 5; i++) {
+      // Create Proposal
+      transaction = await dao.connect(investor1).createProposal(`Proposal ${i + 1}`, ether(10 * (i-2)), recipient.address, "ipsum lorum")
+      await transaction.wait()
+      console.log(`Proposal ${i + 1}`)
+
+      // Vote 1
+      transaction = await dao.connect(investor1).downVote(i + 1)
+      await transaction.wait()
+      console.log(`Investor 1 vote ${i + 1}`)
+
+      // Vote 2
+      transaction = await dao.connect(investor2).downVote(i + 1)
+      await transaction.wait()
+      console.log(`Investor 2 vote ${i + 1}`)
+
+      // Vote 3
+      transaction = await dao.connect(investor3).downVote(i + 1)
+      await transaction.wait()
+      console.log(`Investor 3 vote ${i + 1}`)
+
+      // Finalize
+      transaction = await dao.connect(investor1).finalizeProposal(i + 1, "Reject")
       await transaction.wait()
 
       console.log(`Created & Finalized Proposal ${i + 1}\n`)
@@ -86,21 +124,22 @@ async function main() {
     console.log(`Creating one more proposal...\n`)
 
     // Create one more proposal
-    transaction = await dao.connect(investor1).createProposal(`Proposal 4`, ether(100), recipient.address)
+    transaction = await dao.connect(investor1).createProposal(`Proposal 6`, ether(100), recipient.address, "ipsum lorum")
     await transaction.wait()
-    console.log('Proposal 4')
+    console.log('Proposal 6')
 
     // Vote 1
-    transaction = await dao.connect(investor2).vote(0)
+    transaction = await dao.connect(investor2).upVote(6)
     await transaction.wait()
-    console.log('Proposal 4 vote investor 2')
+    console.log('Proposal 6 vote investor 2')
 
     // Vote 2
-    transaction = await dao.connect(investor3).vote(0)
+    transaction = await dao.connect(investor3).upVote(6)
     await transaction.wait()
-    console.log('Proposal 4 vote investor 3')
+    console.log('Proposal 6 vote investor 3')
 
     console.log(`Finished.\n`)
+
 }
 
 // We recommend this pattern to be able to use async/await everywhere

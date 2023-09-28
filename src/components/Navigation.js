@@ -1,8 +1,9 @@
 import Navbar from 'react-bootstrap/Navbar';
+import { ethers } from 'ethers';
 
 import logo from '../logo.png';
 
-const Navigation = ({ account }) => {
+const Navigation = ({ account, userBalance}) => {
   return (
     <Navbar className='my-3'>
       <img
@@ -15,7 +16,9 @@ const Navigation = ({ account }) => {
       <Navbar.Brand href="#">Dapp University DAO</Navbar.Brand>
       <Navbar.Collapse className="justify-content-end">
         <Navbar.Text>
-          {account}
+          <p>Account: {account} </p>
+          {/*<p> User balance: {ethers.utils.formatUnits(userBalance.toString(),18)} DAPP  </p>*/}
+
         </Navbar.Text>
       </Navbar.Collapse>
     </Navbar>
